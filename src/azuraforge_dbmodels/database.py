@@ -3,11 +3,6 @@ from sqlalchemy import create_engine as sa_create_engine, Column, String, JSON, 
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.sql import func
 
-# Bu engine, sadece `init_db` için veya tekil scriptlerde kullanılır.
-# Servisler kendi engine'lerini kendileri yönetir.
-_engine = None
-_SessionLocal = None
-
 Base = declarative_base()
 
 class Experiment(Base):

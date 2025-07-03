@@ -11,3 +11,9 @@ dependencies = [
     "SQLAlchemy",
     "psycopg2-binary"
 ]
+
+[tool.semantic_release]
+branch = "main"
+version_variable = "pyproject.toml:project.version"
+upload_to_pypi = false
+major_on_zero = false
