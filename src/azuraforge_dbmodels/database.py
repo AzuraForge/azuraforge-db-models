@@ -13,6 +13,7 @@ class Experiment(Base):
     batch_name = Column(String, nullable=True)
     pipeline_name = Column(String, index=True, nullable=False)
     status = Column(String, index=True, default="PENDING")
+    model_path = Column(String, nullable=True) # <-- YENİ SÜTUN
     config = Column(JSON, nullable=True)
     results = Column(JSON, nullable=True)
     error = Column(JSON, nullable=True)
