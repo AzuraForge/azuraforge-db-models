@@ -1,4 +1,24 @@
 # dbmodels/src/azuraforge_dbmodels/__init__.py
-from .database import Base, Experiment, User, get_session_local, sa_create_engine, init_db
+"""
+Bu __init__ dosyası, `azuraforge_dbmodels` paketinden dışa aktarılacak
+ana bileşenleri tanımlar. Bu, diğer servislerin "from azuraforge_dbmodels import ..."
+yapabilmesini sağlar.
+"""
+from .database import (
+    Base,
+    Experiment,
+    User,
+    get_session_local,
+    sa_create_engine,
+    init_db
+)
 
-__all__ = ["Base", "Experiment", "User", "get_session_local", "sa_create_engine", "init_db"]
+# Dışa aktarılacak tüm bileşenlerin listesi
+__all__ = [
+    "Base",
+    "Experiment",
+    "User",
+    "get_session_local",
+    "sa_create_engine",
+    "init_db",
+]

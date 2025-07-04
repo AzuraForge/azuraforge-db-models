@@ -1,21 +1,35 @@
 # dbmodels/src/azuraforge_dbmodels/database.py
+"""
+Bu modül, AzuraForge ekosistemindeki tüm servisler tarafından paylaşılan
+SQLAlchemy ORM modellerini ve temel veritabanı yardımcılarını tanımlar.
+"""
 import os
-from sqlalchemy import create_engine as sa_create_engine, Column, String, JSON, DateTime
+import uuid
+from sqlalchemy import (
+    create_engine as sa_create_engine,
+    Column,
+    String,
+    JSON,
+    DateTime
+)
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.sql import func
-import uuid
 
 Base = declarative_base()
 
 class User(Base):
+    """Kullanıcı bilgilerini temsil eden ORM modeli."""
     __tablename__ = "users"
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     username = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    def __repr__(self): return f"<User(username='{self.username}')>"
+
+    def __repr__(self):
+        return f"<User(username='{self.username}')>"
 
 class Experiment(Base):
+    """Bir ML deneyinin tüm meta verilerini ve sonuçlarını temsil eden ORM modeli."""
     __tablename__ = "experiments"
     id = Column(String, primary_key=True, index=True)
     task_id = Column(String, index=True, nullable=False)
@@ -30,20 +44,29 @@ class Experiment(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     completed_at = Column(DateTime(timezone=True), nullable=True)
     failed_at = Column(DateTime(timezone=True), nullable=True)
-    def __repr__(self): return f"<Experiment(id='{self.id}', status='{self.status}')>"
+
+    def __repr__(self):
+        return f"<Experiment(id='{self.id}', status='{self.status}')>"
 
 def get_session_local(engine):
-    """Verilen bir engine'e bağlı bir SessionLocal fabrikası döndürür."""
+    """
+    Verilen bir SQLAlchemy engine'e bağlı, thread-local olmayan bir 
+    SessionLocal fabrikası döndürür.
+    """
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def init_db():
-    """Veritabanı tablolarını ortam değişkeninden aldığı URL ile oluşturur."""
-    # DİKKAT: Artık doğrudan ortam değişkenini okuyoruz.
-    # Bu fonksiyon sadece API tarafından çağrılacak ve API'nin ortamı güvenilir.
+    """
+    Veritabanı tablolarını, `DATABASE_URL` ortam değişkeninden aldığı URL ile oluşturur.
+    Bu genellikle sadece API servisinin başlangıcında bir kez çağrılır.
+    """
     DATABASE_URL = os.getenv("DATABASE_URL")
     if not DATABASE_URL:
         raise ValueError("init_db called, but DATABASE_URL environment variable is not set!")
     
+    # Tablo oluşturma işlemi için geçici bir motor oluştur ve kullanımdan sonra yok et.
     temp_engine = sa_create_engine(DATABASE_URL)
-    Base.metadata.create_all(bind=temp_engine)
-    temp_engine.dispose()
+    try:
+        Base.metadata.create_all(bind=temp_engine)
+    finally:
+        temp_engine.dispose()
