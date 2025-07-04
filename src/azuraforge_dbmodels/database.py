@@ -8,17 +8,14 @@ import uuid
 Base = declarative_base()
 
 class User(Base):
-    # ... (içerik aynı)
     __tablename__ = "users"
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     username = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    def __repr__(self):
-        return f"<User(username='{self.username}')>"
+    def __repr__(self): return f"<User(username='{self.username}')>"
 
 class Experiment(Base):
-    # ... (içerik aynı) ...
     __tablename__ = "experiments"
     id = Column(String, primary_key=True, index=True)
     task_id = Column(String, index=True, nullable=False)
@@ -33,18 +30,19 @@ class Experiment(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     completed_at = Column(DateTime(timezone=True), nullable=True)
     failed_at = Column(DateTime(timezone=True), nullable=True)
-    def __repr__(self):
-        return f"<Experiment(id='{self.id}', status='{self.status}')>"
+    def __repr__(self): return f"<Experiment(id='{self.id}', status='{self.status}')>"
 
 def get_session_local(engine):
+    """Verilen bir engine'e bağlı bir SessionLocal fabrikası döndürür."""
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def init_db():
     """Veritabanı tablolarını ortam değişkeninden aldığı URL ile oluşturur."""
-    # TEMİZ HALİ: Artık sadece ortamdaki DATABASE_URL'i okuyor.
+    # DİKKAT: Artık doğrudan ortam değişkenini okuyoruz.
+    # Bu fonksiyon sadece API tarafından çağrılacak ve API'nin ortamı güvenilir.
     DATABASE_URL = os.getenv("DATABASE_URL")
     if not DATABASE_URL:
-        raise ValueError("DATABASE_URL ortam değişkeni ayarlanmamış!")
+        raise ValueError("init_db called, but DATABASE_URL environment variable is not set!")
     
     temp_engine = sa_create_engine(DATABASE_URL)
     Base.metadata.create_all(bind=temp_engine)
