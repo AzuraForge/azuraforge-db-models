@@ -1,16 +1,18 @@
+# ========== DOSYA: dbmodels/pyproject.toml ==========
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "azuraforge-dbmodels"
-version = "0.1.0"
-description = "Shared SQLAlchemy ORM models for the AzuraForge ecosystem."
+version = "0.2.0"
+description = "Shared SQLAlchemy ORM models and Alembic migrations for the AzuraForge ecosystem."
 requires-python = ">=3.10"
 dependencies = [
     "python-semantic-release",
     "SQLAlchemy",
-    "psycopg2-binary"
+    "psycopg2-binary",
+    "alembic"
 ]
 
 [tool.semantic_release]
