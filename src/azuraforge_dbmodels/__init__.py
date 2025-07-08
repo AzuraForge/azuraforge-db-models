@@ -10,7 +10,6 @@ from .database import (
     User,
     get_session_local,
     sa_create_engine,
-    init_db
 )
 
 # Dışa aktarılacak tüm bileşenlerin listesi
@@ -20,5 +19,4 @@ __all__ = [
     "User",
     "get_session_local",
     "sa_create_engine",
-    "init_db",
 ]

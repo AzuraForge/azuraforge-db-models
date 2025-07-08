@@ -1,3 +1,4 @@
+# ========== YENİ DOSYA: dbmodels/alembic/versions/1f5830c45ab1_create_initial_tables_for_user_and_.py ==========
 """Create initial tables for User and Experiment
 
 Revision ID: 1f5830c45ab1

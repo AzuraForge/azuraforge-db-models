@@ -1,4 +1,4 @@
-# ========== DOSYA: dbmodels/alembic/env.py ==========
+# ========== YENİ DOSYA: dbmodels/alembic/env.py ==========
 import os
 from logging.config import fileConfig
 

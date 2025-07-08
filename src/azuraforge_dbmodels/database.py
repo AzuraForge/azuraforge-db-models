@@ -55,18 +55,4 @@ def get_session_local(engine):
     """
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-def init_db():
-    """
-    Veritabanı tablolarını, `DATABASE_URL` ortam değişkeninden aldığı URL ile oluşturur.
-    Bu genellikle sadece API servisinin başlangıcında bir kez çağrılır.
-    """
-    DATABASE_URL = os.getenv("DATABASE_URL")
-    if not DATABASE_URL:
-        raise ValueError("init_db called, but DATABASE_URL environment variable is not set!")
-    
-    # Tablo oluşturma işlemi için geçici bir motor oluştur ve kullanımdan sonra yok et.
-    temp_engine = sa_create_engine(DATABASE_URL)
-    try:
-        Base.metadata.create_all(bind=temp_engine)
-    finally:
-        temp_engine.dispose()
+# init_db fonksiyonu buradan kaldırıldı. Artık Alembic tarafından yönetiliyor.
